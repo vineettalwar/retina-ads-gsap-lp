@@ -3,6 +3,7 @@
 import { useRef } from 'react'
 import { useIntro } from '@/context/IntroContext'
 import { ProjectsSection } from '@/components/ProjectsSection'
+import { RETINA_COPY } from '@/content/retina-fr'
 import {
   registerGsapPlugins,
   gsap,
@@ -137,18 +138,14 @@ export function AboutSection() {
     >
       <div id="about">
         <div id="about-text">
-          As a next-generation
-          <span className="other-accent"> creative agency</span>, we marry generative AI and{' '}
-          <span className="other-accent">automation.</span>
+          {RETINA_COPY.about.before}
+          <span className="other-accent">{RETINA_COPY.about.accent1}</span>
+          {RETINA_COPY.about.middle}
+          <span className="other-accent">{RETINA_COPY.about.accent2}</span>
+          {RETINA_COPY.about.after}
         </div>
 
-        <div id="about-sub">
-          We are Retina Ads. We believe world-class ad creatives, elite web development, and
-          advanced business automation shouldn&apos;t carry a premium price tag. Utilizing
-          Google&apos;s top and latest state-of-the-art model called Google Omni for cinematic video
-          generation and NanoBanana for hyper-realistic product imagery, paired with high-end
-          GSAP-powered landing pages that feel like they&apos;re worth millions and beyond.
-        </div>
+        <div id="about-sub">{RETINA_COPY.about.sub}</div>
 
         <div className="about-btn">Info →</div>
 

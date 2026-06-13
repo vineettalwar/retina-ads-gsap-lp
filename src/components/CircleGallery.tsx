@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef } from 'react'
+import { RETINA_COPY } from '@/content/retina-fr'
 import { useLenis } from '@/context/ScrollSmootherContext'
 import {
   registerGsapPlugins,
@@ -122,8 +123,11 @@ export function CircleGallery() {
         </div>
 
         <p ref={phraseRef} id="cg-phrase">
-          Each campaign is designed to maximize your impact, automate your growth and divide your
-          costs.
+          {RETINA_COPY.circleGallery.before}
+          <span className="other-accent">{RETINA_COPY.circleGallery.accent1}</span>
+          {RETINA_COPY.circleGallery.middle}
+          <span className="other-accent">{RETINA_COPY.circleGallery.accent2}</span>
+          {RETINA_COPY.circleGallery.after}
         </p>
       </div>
     </section>

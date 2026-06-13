@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "lenis/dist/lenis.css";
 import "./globals.css";
 import "@/lib/i18n";
+import { RETINA_META } from "@/content/retina-fr";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -11,8 +12,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Retina Ads — AI driven ad agency.",
-  description: "Augmented creativity, preserved budgets. Premium GSAP landing pages, AI video ads, and n8n workflows.",
+  title: RETINA_META.title,
+  description: RETINA_META.description,
   icons: {
     icon: [
       { url: "/seo/favicon.ico" },
@@ -27,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable}`}>
+    <html lang="fr" className={`${inter.variable}`}>
       <head>
         <link
           rel="preload"

@@ -4,10 +4,11 @@ import { useEffect } from 'react'
 import { useScrollTo } from '@/context/ScrollSmootherContext'
 import { loadAsciiFromImage } from '@/lib/asciiArt'
 import { buildChrHoverElement } from '@/lib/i18n'
+import { RETINA_SOCIAL } from '@/content/retina-fr'
 
 const SOCIAL_LINKS = {
-  LinkedIn: 'https://www.linkedin.com/in/chanchal-choudhary-6bb126408/?skipRedirect=true',
-  Behance: 'https://www.behance.net/',
+  LinkedIn: RETINA_SOCIAL.linkedin,
+  Behance: RETINA_SOCIAL.behance,
 } as const
 
 const NAV_TARGETS = {

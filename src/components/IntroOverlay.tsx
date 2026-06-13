@@ -29,14 +29,20 @@ function splitIntoChars(el: HTMLElement) {
 
 export function IntroOverlay() {
   const scopeRef = useRef<HTMLDivElement>(null)
-  const introStartedRef = useRef(false)
   const { introComplete, setIntroComplete, startLenis, startShader } = useIntro()
 
   useLayoutEffect(() => {
-    if (introStartedRef.current || introComplete) return
-    introStartedRef.current = true
+    if (introComplete) return
 
     registerGsapPlugins()
+
+    let cancelled = false
+    let master: gsap.core.Timeline | null = null
+    let forceScrollTop: (() => void) | null = null
+    let resizeHandler: (() => void) | null = null
+
+    const run = () => {
+      if (cancelled || introComplete) return
 
       if (history.scrollRestoration) {
         history.scrollRestoration = 'manual'
@@ -59,7 +65,10 @@ export function IntroOverlay() {
       const nameLayer = document.getElementById('name-layer')
       const introBg = document.getElementById('intro-bg')
 
-      if (!pContent || !pLogo || !pLuke || !pBaffait || !pDot || !tPanelRed || !tPanelDark || !hero || !nameLayer) return
+      if (!pContent || !pLogo || !pLuke || !pBaffait || !pDot || !tPanelRed || !tPanelDark || !hero || !nameLayer || !introBg) {
+        requestAnimationFrame(run)
+        return
+      }
 
       const getViewportSize = () => ({
         width: document.documentElement.clientWidth || window.innerWidth,
@@ -130,15 +139,21 @@ export function IntroOverlay() {
         })
       }
 
+      resizeHandler = refreshIntroNameAnchor
       window.addEventListener('resize', refreshIntroNameAnchor)
 
       const finishIntro = () => {
+        window.scrollTo(0, 0)
+        document.documentElement.scrollTop = 0
         document.documentElement.style.overflow = ''
         setIntroComplete(true)
         startLenis()
         sessionStorage.setItem('index-return-fade', '1')
         window.dispatchEvent(new Event('intro-complete'))
-        requestAnimationFrame(() => refreshScrollTriggers())
+        requestAnimationFrame(() => {
+          window.scrollTo(0, 0)
+          refreshScrollTriggers()
+        })
       }
 
       const applySettledTitleState = () => {
@@ -190,7 +205,7 @@ export function IntroOverlay() {
         gsap.set(pDot, { opacity: 1 })
         layoutNames()
         finishIntroSetup()
-        return () => window.removeEventListener('resize', refreshIntroNameAnchor)
+        return
       }
 
       const logoChars = splitIntoChars(pLogo)
@@ -206,7 +221,7 @@ export function IntroOverlay() {
       gsap.set([pContent, tPanelRed, tPanelDark], { willChange: 'transform' })
       gsap.set(hero, { opacity: 0 })
 
-      const forceScrollTop = () => {
+      forceScrollTop = () => {
         window.scrollTo(0, 0)
         document.documentElement.scrollTop = 0
       }
@@ -214,10 +229,10 @@ export function IntroOverlay() {
       window.addEventListener('scroll', forceScrollTop)
       document.documentElement.style.overflow = 'hidden'
 
-      const master = gsap.timeline({
+      master = gsap.timeline({
         delay: 0.2,
         onComplete: () => {
-          window.removeEventListener('scroll', forceScrollTop)
+          if (forceScrollTop) window.removeEventListener('scroll', forceScrollTop)
           finishIntro()
         },
       })
@@ -291,10 +306,17 @@ export function IntroOverlay() {
           '<',
         )
 
-      return () => {
-        window.removeEventListener('resize', refreshIntroNameAnchor)
-        window.removeEventListener('scroll', forceScrollTop)
-      }
+    }
+
+    run()
+
+    return () => {
+      cancelled = true
+      master?.kill()
+      if (forceScrollTop) window.removeEventListener('scroll', forceScrollTop)
+      if (resizeHandler) window.removeEventListener('resize', resizeHandler)
+      document.documentElement.style.overflow = ''
+    }
   }, [introComplete, setIntroComplete, startLenis, startShader])
 
   return (

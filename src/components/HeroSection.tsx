@@ -6,6 +6,7 @@ import { getContactScrollOffset } from '@/lib/scroll-targets'
 import { useIntro } from '@/context/IntroContext'
 import { HeroCanvas } from '@/components/HeroCanvas'
 import { buildChrHoverElement } from '@/lib/i18n'
+import { RETINA_COPY, RETINA_META, RETINA_SOCIAL } from '@/content/retina-fr'
 import {
   registerGsapPlugins,
   gsap,
@@ -19,9 +20,9 @@ const NAV_TARGETS: Record<string, string> = {
 }
 
 const SOCIAL_LINKS = {
-  BEHANCE: 'https://www.behance.net/',
-  LINKEDIN: 'https://www.linkedin.com/',
-  GITHUB: 'https://github.com/',
+  BEHANCE: RETINA_SOCIAL.behance,
+  LINKEDIN: RETINA_SOCIAL.linkedin,
+  GITHUB: RETINA_SOCIAL.github,
 } as const
 
 const SOCIAL_LABELS = ['BEHANCE', 'LINKEDIN', 'GITHUB'] as const
@@ -60,7 +61,11 @@ export function HeroSection() {
       const shouldSkipIntro =
         !!sessionStorage.getItem('index-return-fade') ||
         window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      if (introComplete || shouldSkipIntro) return
+      if (introComplete) {
+        gsap.set('#hero', { opacity: 1 })
+        return
+      }
+      if (shouldSkipIntro) return
       gsap.set('#hero-tagline, #hero-bar', { opacity: 0, clipPath: 'inset(0 0 100% 0)' })
       gsap.set('#hero-line', { scaleX: 0, transformOrigin: 'left center' })
     },
@@ -121,7 +126,7 @@ export function HeroSection() {
             zIndex: 10,
           }}
         >
-          <h1 className="sr-only">Retina Ads — AI driven ad agency.</h1>
+          <h1 className="sr-only">{RETINA_META.h1}</h1>
 
           <div
             id="hero-canvas"
@@ -144,8 +149,9 @@ export function HeroSection() {
               zIndex: 1,
             }}
           >
-            Augmented creativity, <em className="other-accent">preserved budgets</em>. Premium GSAP
-            landing pages, AI video ads, and n8n workflows.
+            {RETINA_COPY.heroTagline.before}
+            <em className="other-accent">{RETINA_COPY.heroTagline.accent}</em>
+            {RETINA_COPY.heroTagline.after}
           </div>
 
           <div
@@ -177,7 +183,7 @@ export function HeroSection() {
               pointerEvents: 'auto',
             }}
           >
-            <div className="hero-bar-left chr-hover" data-chr="→ V3.0" style={heroChromeStyle} />
+            <div className="hero-bar-left chr-hover" data-chr="🡺V3.0" style={heroChromeStyle} />
 
             <nav
               className="hero-bar-center"
@@ -189,22 +195,25 @@ export function HeroSection() {
               }}
               aria-label="Social links"
             >
-              {SOCIAL_LABELS.map((label, index) => (
+              {SOCIAL_LABELS.map((label, index) => {
+                const href = SOCIAL_LINKS[label]
+                const isExternal = href.startsWith('http')
+                return (
                 <span key={label} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
                   {index > 0 ? <span aria-hidden="true">/</span> : null}
                   <a
-                    href={SOCIAL_LINKS[label]}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href={href}
+                    {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                     className="chr-hover"
                     data-chr={label}
                     style={{
                       color: 'inherit',
                       textDecoration: 'none',
                     }}
+                    onClick={isExternal ? undefined : (e) => e.preventDefault()}
                   />
                 </span>
-              ))}
+              )})}
             </nav>
 
             <nav

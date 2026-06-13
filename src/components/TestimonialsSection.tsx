@@ -2,6 +2,7 @@
 
 import { useRef } from 'react'
 import type { TestimonialCard } from '@/types'
+import { RETINA_COPY } from '@/content/retina-fr'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
 import {
   registerGsapPlugins,
@@ -165,7 +166,7 @@ export function TestimonialsSection() {
               marginBottom: 24,
             }}
           >
-            Reviews
+            {RETINA_COPY.testimonials.subtitle}
           </div>
           <div
             className="testimonials-title"
@@ -177,7 +178,7 @@ export function TestimonialsSection() {
               color: '#f0f0f0',
             }}
           >
-            What our partners say about us.
+            {RETINA_COPY.testimonials.title}
           </div>
         </div>
 

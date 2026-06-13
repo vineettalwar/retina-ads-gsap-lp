@@ -41,7 +41,6 @@ export function ContactFooterAnimations() {
       const stTimeline = document.getElementById('scroll-timeline')
       const pctEl = document.getElementById('scroll-pct')
       const footerEl = document.getElementById('footer')
-      const revealWrap = document.getElementById('reveal-image-wrap')
       const contactPin = document.getElementById('contact-pin')
       const contactSection = document.getElementById('contact')
 
@@ -50,7 +49,6 @@ export function ContactFooterAnimations() {
       const setContactOverlay = (visible: boolean) => {
         blobWrap.style.visibility = visible ? 'visible' : 'hidden'
         if (contactBg) contactBg.style.display = visible ? 'block' : 'none'
-        if (revealWrap) revealWrap.style.visibility = visible ? 'hidden' : 'visible'
       }
 
       setContactOverlay(false)

@@ -49,6 +49,10 @@ function LenisRuntime({ children }: { children: ReactNode }) {
       lenis.scrollTo(0, { immediate: true })
       document.documentElement.style.overflow = ''
       refreshScrollTriggers()
+      requestAnimationFrame(() => {
+        lenis.scrollTo(0, { immediate: true })
+        refreshScrollTriggers()
+      })
     })
 
     const cleanupRefresh = setupScrollRefreshOnReady('#main-content')
@@ -63,29 +67,40 @@ function LenisRuntime({ children }: { children: ReactNode }) {
   }, [store, registerLenisStart])
 
   useLayoutEffect(() => {
-    if (introComplete) {
-      const lenis = store.getLenis()
-      if (lenis) {
-        lenis.start()
-        if (window.location.hash === '#contact') {
-          const contact = document.querySelector('#contact')
-          if (contact) {
-            lenis.scrollTo(contact as HTMLElement, {
-              offset: getContactScrollOffset(),
-              immediate: true,
-            })
-          } else {
-            lenis.scrollTo(0, { immediate: true })
-          }
-        } else {
-          lenis.scrollTo(0, { immediate: true })
+    if (!introComplete) return
+    const lenis = store.getLenis()
+
+    const resetToTop = () => {
+      if (lenis && window.location.hash === '#contact') {
+        const contact = document.querySelector('#contact')
+        if (contact) {
+          lenis.scrollTo(contact as HTMLElement, {
+            offset: getContactScrollOffset(),
+            immediate: true,
+          })
+          refreshScrollTriggers()
+          return
         }
-        refreshScrollTriggers()
       }
-      const contactBg = document.getElementById('contact-bg')
-      const blobWrap = document.getElementById('contact-blob-wrap')
-      if (contactBg) contactBg.style.display = 'none'
-      if (blobWrap) blobWrap.style.visibility = 'hidden'
+      window.scrollTo(0, 0)
+      document.documentElement.scrollTop = 0
+      if (lenis) lenis.scrollTo(0, { immediate: true })
+      refreshScrollTriggers()
+    }
+
+    resetToTop()
+    requestAnimationFrame(resetToTop)
+    const t1 = window.setTimeout(resetToTop, 100)
+    const t2 = window.setTimeout(resetToTop, 400)
+
+    const contactBg = document.getElementById('contact-bg')
+    const blobWrap = document.getElementById('contact-blob-wrap')
+    if (contactBg) contactBg.style.display = 'none'
+    if (blobWrap) blobWrap.style.visibility = 'hidden'
+
+    return () => {
+      window.clearTimeout(t1)
+      window.clearTimeout(t2)
     }
   }, [introComplete, store])
 

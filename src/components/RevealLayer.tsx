@@ -11,6 +11,7 @@ import {
   scrollTriggerDefaults,
 } from '@/lib/gsap/register'
 import { createHeroSequencePlayer, REVEAL_FRAME_TIMELINE } from '@/lib/heroSequence'
+import { RETINA_COPY } from '@/content/retina-fr'
 
 export function RevealLayer() {
   const scopeRef = useRef<HTMLDivElement>(null)
@@ -239,7 +240,7 @@ export function RevealLayer() {
       <div id="reveal-overlay" />
       <p id="reveal-phrase">
         {[
-          ...'Essentially, we generate your ads using AI.',
+          ...RETINA_COPY.revealPhrase,
         ].map((ch, i) => (
           <span key={i} className="rp-char" style={{ display: 'inline-block' }}>
             {ch === ' ' ? '\u00a0' : ch}

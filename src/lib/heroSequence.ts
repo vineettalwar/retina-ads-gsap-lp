@@ -82,10 +82,19 @@ export function createHeroSequencePlayer(
   function drawFrameAtProgress(progress: number) {
     if (totalLoaded === 0) return
     const clamped = Math.min(1, Math.max(0, progress))
-    const loadedPos = Math.round(clamped * (totalLoaded - 1))
-    const sourceIdx = loadedFrameIdx[loadedPos]
-    if (sourceIdx == null) return
-    drawFrame(sourceIdx)
+    const targetIdx = Math.round(clamped * (totalFrames - 1))
+
+    if (frames[targetIdx]?.naturalWidth) {
+      drawFrame(targetIdx)
+      return
+    }
+
+    let bestIdx = loadedFrameIdx[0] ?? 0
+    for (const idx of loadedFrameIdx) {
+      if (idx <= targetIdx) bestIdx = idx
+      else break
+    }
+    drawFrame(bestIdx)
   }
 
   function probe(n: number): Promise<HTMLImageElement | null> {
@@ -118,7 +127,7 @@ export function createHeroSequencePlayer(
     resizeCanvas()
     drawFrame(0)
 
-    const speedBatch = 10
+    const speedBatch = 49
     const t0 = performance.now()
     const batchNums = Array.from(
       { length: Math.min(speedBatch, totalFrames - 1) },
@@ -136,11 +145,11 @@ export function createHeroSequencePlayer(
     return elapsed > 4000 ? 3 : elapsed > 2000 ? 2 : 1
   }
 
-  async function loadRemainingFrames(skip: number) {
-    const batchEnd = 11
+  async function loadRemainingFrames() {
+    const batchEnd = 50
     const toLoad: number[] = []
     for (let i = batchEnd + 1; i <= totalFrames; i++) {
-      if (skip <= 1 || i % skip === 0) toLoad.push(i)
+      toLoad.push(i)
     }
 
     let cursor = 0
@@ -176,10 +185,10 @@ export function createHeroSequencePlayer(
 
   async function load() {
     let frameSkip = await loadFirstBatch()
-    if (isMobile) frameSkip = Math.max(frameSkip, 3)
+    if (isMobile) frameSkip = Math.max(frameSkip, 2)
     if (totalLoaded === 0) return false
 
-    loadRemainingFrames(frameSkip).catch((err) =>
+    loadRemainingFrames().catch((err) =>
       console.error('Hero sequence background load error:', err),
     )
     return true

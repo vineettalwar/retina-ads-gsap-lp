@@ -12,15 +12,12 @@ import {
   SCROLL_REFRESH_PRIORITY,
   scrollTriggerDefaults,
 } from '@/lib/gsap/register'
+import { RETINA_COPY } from '@/content/retina-fr'
 
-const SECTION_DEFS = [
-  { id: 'about', name: 'About' },
-  { id: 'projects', name: 'Projects' },
-  { id: 'circle-gallery', name: 'Gallery' },
-  { id: 'skills', name: 'Skills' },
-  { id: 'testimonials', name: 'Reviews' },
-  { id: 'contact', name: 'Contact' },
-]
+const SECTION_DEFS = RETINA_COPY.scrollSections.map((section) => ({
+  id: section.id,
+  name: section.name,
+}))
 
 function isMobileViewport() {
   return window.matchMedia('(max-width: 768px)').matches

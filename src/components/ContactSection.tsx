@@ -1,12 +1,14 @@
 'use client'
 
+import { RETINA_COPY, RETINA_SOCIAL } from '@/content/retina-fr'
+
 export function ContactSection() {
   return (
     <>
       <div id="contact-bg" aria-hidden="true" />
       <section id="contact">
         <div id="contact-pin">
-          <h2 id="contact-title">Contact</h2>
+          <h2 id="contact-title">{RETINA_COPY.contact.title}</h2>
 
           <p
             id="contact-dispo"
@@ -23,8 +25,9 @@ export function ContactSection() {
               zIndex: 2,
             }}
           >
-            Ready to scale your advertising and automate your operations? Our team is{' '}
-            <span className="other-accent">available immediately</span> for campaigns.
+            {RETINA_COPY.contact.dispo1.before}
+            <span className="other-accent">{RETINA_COPY.contact.dispo1.accent}</span>
+            {RETINA_COPY.contact.dispo1.after}
           </p>
 
           <div
@@ -63,7 +66,7 @@ export function ContactSection() {
           >
             <div id="contact-socials" style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
               <a
-                href="https://www.linkedin.com/"
+                href={RETINA_SOCIAL.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
@@ -77,9 +80,7 @@ export function ContactSection() {
                 LinkedIn
               </a>
               <a
-                href="https://www.behance.net/"
-                target="_blank"
-                rel="noopener noreferrer"
+                href={RETINA_SOCIAL.behance}
                 style={{
                   fontFamily: 'Inter, sans-serif',
                   fontSize: 16,
@@ -143,8 +144,9 @@ export function ContactSection() {
               zIndex: 2,
             }}
           >
-            We deliver custom n8n workflows and AI video/image ads for{' '}
-            <span className="other-accent">all budgets</span> worldwide.
+            {RETINA_COPY.contact.dispo2.before}
+            <span className="other-accent">{RETINA_COPY.contact.dispo2.accent}</span>
+            {RETINA_COPY.contact.dispo2.after}
           </p>
         </div>
       </section>
