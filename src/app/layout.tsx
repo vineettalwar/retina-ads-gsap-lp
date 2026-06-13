@@ -1,20 +1,24 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
+import "lenis/dist/lenis.css";
 import "./globals.css";
+import "@/lib/i18n";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "Website Clone",
-  description: "Pixel-perfect website clone",
+  title: "Retina Ads — AI driven ad agency.",
+  description: "Augmented creativity, preserved budgets. Premium GSAP landing pages, AI video ads, and n8n workflows.",
+  icons: {
+    icon: [
+      { url: "/seo/favicon.ico" },
+      { url: "/seo/favicon.png", type: "image/png" },
+    ],
+  },
 };
 
 export default function RootLayout({
@@ -23,11 +27,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en" className={`${inter.variable}`}>
+      <head>
+        <link
+          rel="preload"
+          href="/images/hero-sequence/0001.jpg?v=20260416-r2"
+          as="image"
+          fetchPriority="high"
+        />
+      </head>
+      <body style={{ backgroundColor: "#0a0a0a", color: "#f0f0f0", margin: 0, padding: 0, overflowX: "hidden" }}>
+        {children}
+      </body>
     </html>
   );
 }
